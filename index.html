@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Painel Privacy Trick Android FX</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#ff0000">
+
+  <script>
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("service-worker.js");
+    }
+  </script>
+
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: radial-gradient(circle at top, #1a0000, #000000 70%);
+      font-family: Arial, Helvetica, sans-serif;
+      color: #fff;
+    }
+
+    .panel {
+      width: 320px;
+      background: #000;
+      border: 2px solid #ff0000;
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 0 25px rgba(255,0,0,0.4);
+    }
+
+    .title {
+      text-align: center;
+      color: #ff0000;
+      font-weight: bold;
+      margin-bottom: 12px;
+      font-size: 16px;
+      letter-spacing: 1px;
+    }
+
+    .section {
+      border: 1px solid #330000;
+      border-radius: 8px;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+
+    .section h3 {
+      margin: 0 0 8px;
+      font-size: 13px;
+      color: #ff4444;
+    }
+
+    .row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+      font-size: 13px;
+    }
+
+    .row:last-child {
+      margin-bottom: 0;
+    }
+
+    input[type="checkbox"], input[type="radio"] {
+      accent-color: #ff0000;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: #ff0000;
+    }
+
+    .value {
+      text-align: center;
+      font-size: 12px;
+      margin-top: 4px;
+      color: #ccc;
+    }
+
+    .save-btn {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      background: #ff0000;
+      border: none;
+      border-radius: 8px;
+      color: #000;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .save-btn:active {
+      transform: scale(0.97);
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="panel">
+    <div class="title">PRIVACY TRICK • ANDROID FX</div>
+
+    <div class="section">
+      <h3>AIM</h3>
+      <div class="row">
+        <span>Aim Lock (AL)</span>
+        <input type="checkbox" id="aimlock">
+      </div>
+      <div class="row">
+        <span>Android Assist (AA)</span>
+        <input type="checkbox" id="assist">
+      </div>
+      <div class="row">
+        <span>Fixed Aim (FA)</span>
+        <input type="checkbox" id="fixedaim">
+      </div>
+    </div>
+
+    <div class="section">
+      <h3>VISUAL</h3>
+      <div class="row">
+        <span>Hide Mode (HM)</span>
+        <input type="checkbox" id="hide">
+      </div>
+
+      <label>FOV</label>
+      <input type="range" min="0" max="100" id="fov">
+      <div class="value">FOV: <span id="fovValue">50</span></div>
+    </div>
+
+    <div class="section">
+      <h3>SENSITIVITY</h3>
+      <div class="row">
+        <span>High</span>
+        <input type="radio" name="sens" value="high">
+      </div>
+      <div class="row">
+        <span>Low</span>
+        <input type="radio" name="sens" value="low">
+      </div>
+    </div>
+
+    <div class="section">
+      <h3>BYPASS</h3>
+      <div class="row">
+        <span>Safe</span>
+        <input type="radio" name="bypass" value="safe">
+      </div>
+      <div class="row">
+        <span>Pro</span>
+        <input type="radio" name="bypass" value="pro">
+      </div>
+    </div>
+
+    <button class="save-btn" onclick="saveSettings()">SAVE SETTINGS</button>
+  </div>
+
+  <script>
+    const fov = document.getElementById("fov");
+    const fovValue = document.getElementById("fovValue");
+
+    fov.addEventListener("input", () => {
+      fovValue.textContent = fov.value;
+    });
+
+    function saveSettings() {
+      const data = {
+        aimlock: aimlock.checked,
+        assist: assist.checked,
+        fixedaim: fixedaim.checked,
+        hide: hide.checked,
+        fov: fov.value,
+        sens: document.querySelector('input[name="sens"]:checked')?.value,
+        bypass: document.querySelector('input[name="bypass"]:checked')?.value
+      };
+
+      localStorage.setItem("privacyTrickFX", JSON.stringify(data));
+      alert("Settings saved");
+    }
+
+    // Load saved
+    const saved = JSON.parse(localStorage.getItem("privacyTrickFX"));
+    if (saved) {
+      aimlock.checked = saved.aimlock;
+      assist.checked = saved.assist;
+      fixedaim.checked = saved.fixedaim;
+      hide.checked = saved.hide;
+      fov.value = saved.fov || 50;
+      fovValue.textContent = fov.value;
+
+      if (saved.sens) {
+        document.querySelector(`input[name="sens"][value="${saved.sens}"]`).checked = true;
+      }
+      if (saved.bypass) {
+        document.querySelector(`input[name="bypass"][value="${saved.bypass}"]`).checked = true;
+      }
+    }
+  </script>
+
+</body>
+</html>
